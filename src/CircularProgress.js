@@ -36,6 +36,7 @@ export default class CircularProgress extends React.PureComponent {
       fill,
       children,
       childrenContainerStyle,
+      innerPathBackground
     } = this.props;
 
     const maxWidthCircle = backgroundWidth ? Math.max(width, backgroundWidth) : width;
@@ -55,6 +56,22 @@ export default class CircularProgress extends React.PureComponent {
       (arcSweepAngle * this.clampFill(fill)) / 100
     );
     const offset = size - maxWidthCircle * 2;
+
+
+    const innerCircleBackground = this.circlePath(
+      size / 2,
+      size / 2,
+      (size / 2 - width / 2) - (width/2),
+      0,
+      arcSweepAngle
+    );
+    const innerCircleTint = this.circlePath(
+      size / 2,
+      size / 2,
+      (size / 2 - width / 2) - (width/2),
+      0,
+      arcSweepAngle * this.clampFill(fill) / 100
+    );
 
     const localChildrenContainerStyle = {
       ...{
@@ -93,6 +110,26 @@ export default class CircularProgress extends React.PureComponent {
                 fill="transparent"
               />
             )}
+
+            { innerPathBackground &&  [
+              <Path
+                key="innerPathBackground"
+                d={innerCircleBackground}
+                stroke={innerPathBackground}
+                strokeWidth={width/5}
+                strokeLinecap={lineCap}
+                fill="transparent"
+              />,
+              <Path
+                key="innerPathTint"
+                d={innerCircleTint}
+                stroke={tintColor}
+                strokeWidth={(width/3)}
+                strokeLinecap={lineCap}
+                fill="transparent"
+              />
+              ]
+            }
           </G>
         </Svg>
         {children && <View style={localChildrenContainerStyle}>{children(fill)}</View>}
